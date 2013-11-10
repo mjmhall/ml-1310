@@ -18,7 +18,7 @@
 
 %% Initialization
 clear ; close all; clc
-
+graphics_toolkit('fltk');
 %% Load Data
 %  The first two columns contains the exam scores and the third column
 %  contains the label.
