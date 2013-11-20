@@ -25,33 +25,29 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 % Setup some useful variables
 m = size(X, 1);
 
+X = [ones(m,1) X];
 % create vector of y resprented in binary
 yv = repmat(1:num_labels, size(y,1) , 1) == repmat(y, 1, num_labels);         
 
-X = [ones(m,1) X];
+z2 = X * Theta1';
+a2 = sigmoid(z2);
 
-J = 0;
+mm = size(a2,1);
+a2 = [ones(mm,1) a2];
 
-for i = 1:m
-	
-	z2 = X(i,:) * Theta1';
-	a2 = sigmoid(z2);
+z3 = a2 * Theta2';
+a3 = sigmoid(z3);
 
-	mm = size(a2,1);
-	a2 = [ones(mm,1) a2];
+h = a3;
 
-	z3 = a2 * Theta2';
-	a3 = sigmoid(z3);
+y = yv;
 
-	h = a3;
+J = 1/m * sum(sum(-y .* log(h) - (1 - y) .* log(1 - h)));
 
-	y = yv(i,:);
+% Regularization function
+reg = lambda / (2 * m) * (sum(sum(Theta1(:,[2:size(Theta1,2)]) .^2)) + sum(sum(Theta2(:,[2:size(Theta2,2)]) .^2)));
 
-	J = J + sum(-y .* log(h) - (1 - y) .* log(1 - h));
-
-end
-
-J = 1/m * J;
+J = J + reg;
 
 % You need to return the following variables correctly 
 
