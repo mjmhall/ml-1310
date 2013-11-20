@@ -51,8 +51,16 @@ J = J + reg;
 
 % You need to return the following variables correctly 
 
+delta3 = a3 - y;
+
+delta2 = delta3 * Theta2;
+delta2 = delta2(:,(2:end)) .* sigmoidGradient(z2);
+
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
+
+Theta1_grad = 1/m * (X(:,(2:end))' * delta2)';
+Theta2_grad = 1/m * (a2(:,(2:end))' * delta3)';
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
