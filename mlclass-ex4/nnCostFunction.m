@@ -29,7 +29,9 @@ X = [ones(m,1) X];
 % create vector of y resprented in binary
 yv = repmat(1:num_labels, size(y,1) , 1) == repmat(y, 1, num_labels);         
 
-z2 = X * Theta1';
+a1 = X;
+
+z2 = a1 * Theta1';
 a2 = sigmoid(z2);
 
 mm = size(a2,1);
@@ -51,16 +53,17 @@ J = J + reg;
 
 % You need to return the following variables correctly 
 
-delta3 = a3 - y;
+%delta3 = a3 - y;
 
-delta2 = delta3 * Theta2;
-delta2 = delta2(:,(2:end)) .* sigmoidGradient(z2);
+%delta2 = delta3 * Theta2;
+%delta2 = delta2(:,(2:end)) .* sigmoidGradient(z2);
 
+%DELTA2 = delta3 * a2'
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
 
-Theta1_grad = 1/m * (X(:,(2:end))' * delta2)';
-Theta2_grad = 1/m * (a2(:,(2:end))' * delta3)';
+%Theta1_grad = 1/m * (X(:,(2:end))' * delta2)';
+%Theta2_grad = 1/m * (a2(:,(2:end))' * delta3)';
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -94,10 +97,35 @@ Theta2_grad = 1/m * (a2(:,(2:end))' * delta3)';
 %               and Theta2_grad from Part 2.
 %
 
+Theta1_grad = zeros(size(Theta1));
+Theta2_grad = zeros(size(Theta2));
 
+for t= 1 : m
+    
+    a1 = X(t,:);
+	z2 = a1 * Theta1';
+	a2 = sigmoid(z2);
 
+	mm = size(a2,1);
+	a2 = [ones(mm,1) a2];
 
+	z3 = a2 * Theta2';
+	a3 = sigmoid(z3);
 
+	delta3 = a3 - y(t,:);
+	delta2 = delta3 * Theta2;
+	delta2 = delta2(2:end) .* sigmoidGradient(z2);
+
+	Theta2_grad = Theta2_grad + (delta3' * a2);
+	Theta1_grad = Theta1_grad + (delta2' * a1);
+
+end
+
+Theta2_grad = (1/m) * Theta2_grad;
+Theta1_grad = (1/m) * Theta1_grad;
+
+Theta2_grad = Theta2_grad + (lambda/m * ([zeros(size(Theta2,1),1) Theta2(:,2:end)]));
+Theta1_grad = Theta1_grad + (lambda/m * ([zeros(size(Theta1,1),1) Theta1(:,2:end)]));
 
 
 
