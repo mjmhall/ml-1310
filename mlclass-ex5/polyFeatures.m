@@ -15,7 +15,15 @@ X_poly = zeros(numel(X), p);
 %
 % 
 
+m = size(X_poly, 1);
 
+% create a matrix of power values for each row in X
+p_v = repmat([2:p], m, 1);
+
+% create a matrix from the X vector, replicate a column for each power we're calculating
+_X =repmat(X,1,p-1);
+
+X_poly = [X _X .^ p_v];  
 
 
 

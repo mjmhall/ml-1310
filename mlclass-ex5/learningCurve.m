@@ -62,7 +62,7 @@ for i = 1:m
 	X_train = [X(1:i, :)];
 	y_train = y(1:i);
 
-    [theta] = trainLinearReg(X_train, y_train, 1);
+    [theta] = trainLinearReg(X_train, y_train, lambda);
 	%fprintf('Calculating training error %d \n',i );
     [error_train(i), grad] = linearRegCostFunction(X_train, y_train, theta, 0); 
 
